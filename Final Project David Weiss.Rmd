@@ -1,0 +1,42 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+###Front Matter
+```{r}
+library(DataComputing)
+library(tidyverse)
+library(mosaic)
+```
+
+
+### Upload Data Sets
+```{r}
+###Using file.choose we store the csv address in dataset
+dataset
+MainDataTable1<-read_csv(dataset)
+CleanedData1<-MainDataTable1[1:440,1:9]
+
+###Using file.choose we get this address
+DataTable2 <-read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final Project/Secondary Data Set.csv")
+
+```
+
+```{r}
+head(DataTable2)
+```
+
+
+### Change from character to string
+```{r}
+CleanedData1
+```
+
+```{r}
+CleanedData1 %>%
+  group_by(Player) %>%
+  summarise(count=n())%>%
+  arrange(desc(count))
+```
+
