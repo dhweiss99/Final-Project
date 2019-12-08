@@ -12,31 +12,40 @@ library(mosaic)
 
 
 ### Upload Data Sets
-```{r}
+```{r, message= FALSE}
 ###Using file.choose we store the csv address in dataset
-dataset
-MainDataTable1<-read_csv(dataset)
-CleanedData1<-MainDataTable1[1:440,1:9]
+Orig_Fifa_data<-read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final Project/FIFA DATA.csv")
 
-###Using file.choose we get this address
-DataTable2 <-read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final Project/Secondary Data Set.csv")
 
 ```
 
 ```{r}
-head(DataTable2)
+head(Orig_Fifa_data)
+str(Orig_Fifa_data)
 ```
 
 
-### Change from character to string
+### Clean the Data
 ```{r}
-CleanedData1
+Cleaned_fifa_data<-
+  Orig_Fifa_data %>%
+  select("Name", "Age", "Nationality", "Overall", "Potential", "Club", "Value", "Wage", "Preferred Foot", "Weak Foot", "Skill Moves", "Work Rate", "Position", "Height", "Weight", "Crossing",	"Finishing",	"HeadingAccuracy",	"ShortPassing",	"Volleys",	"Dribbling", "Curve",	"FKAccuracy",	"LongPassing",	"BallControl",	"Acceleration",	"SprintSpeed",	"Agility",	"Reactions",	"Balance",	"ShotPower",	"Jumping",	"Stamina",	"Strength",	"LongShots",	"Aggression",	"Interceptions",	"Positioning",	"Vision",	"Penalties",	"Composure",	"Marking",	"StandingTackle",	'SlidingTackle',	"GKDiving",	"GKHandling",	"GKKicking",	"GKPositioning",	"GKReflexes") %>%
+  mutate(Weight=parse_number(Weight),
+         Value=parse_number(Value),
+         Wage=parse_number(Wage),
+         Height=sapply(strsplit(sub("(\\d+)'(\\d+).*", "\\1-\\2", x = Height), "-"), function(x)
+       as.numeric(x[1]) * 30.48 + as.numeric(x[2]) * 2.54)) 
+
+  
+  
 ```
 
 ```{r}
-CleanedData1 %>%
-  group_by(Player) %>%
-  summarise(count=n())%>%
-  arrange(desc(count))
+head(Cleaned_fifa_data)
+```
+
+### Graphs
+```{r}
+
 ```
 
