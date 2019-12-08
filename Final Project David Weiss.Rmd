@@ -4,10 +4,12 @@ output: html_notebook
 ---
 
 ###Front Matter
-```{r}
+```{r, message= FALSE}
 library(DataComputing)
 library(tidyverse)
 library(mosaic)
+library(ggplot2)
+library(maps)
 ```
 
 
@@ -44,8 +46,52 @@ Cleaned_fifa_data<-
 head(Cleaned_fifa_data)
 ```
 
-### Graphs
-```{r}
+### Load in data set 2
 
+```{r}
+Countries<- read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final Project/Countries.csv")
+head(Countries)
+```
+
+```{r}
+Top_100<-
+  Cleaned_fifa_data%>%
+  mutate(rank=rank(desc(Overall))) %>%
+  filter(rank<100)
+ 
+Top_100 
+```
+
+Join
+```{r}
+Joined_top_100 <-
+  Top_100 %>%
+  left_join(Countries, by =c("Nationality"="name"))
+Joined_top_100
+```
+
+```{r}
+Grouped_top_100 <-
+  Joined_top_100 %>%
+  group_by(Nationality) %>%
+  summarise(count=n()) %>%
+  rename("region"=Nationality)
+
+Grouped_top_100
+```
+
+```{r}
+TRY_THIS <-
+  world_map %>% 
+  left_join(Grouped_top_100)
+
+TRY_THIS
+  
+```
+
+```{r}
+ggplot(TRY_THIS, aes(x = long, y = lat, group=group)) +
+  geom_polygon(aes(fill=count), colour = "white")+
+  scale_fill_viridis_c(option = "C")
 ```
 
