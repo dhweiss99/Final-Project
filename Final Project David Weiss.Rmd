@@ -10,6 +10,7 @@ library(tidyverse)
 library(mosaic)
 library(ggplot2)
 library(maps)
+library(party)
 ```
 
 
@@ -36,7 +37,8 @@ Cleaned_fifa_data<-
          Value=parse_number(Value),
          Wage=parse_number(Wage),
          Height=sapply(strsplit(sub("(\\d+)'(\\d+).*", "\\1-\\2", x = Height), "-"), function(x)
-       as.numeric(x[1]) * 30.48 + as.numeric(x[2]) * 2.54)) 
+       as.numeric(x[1]) * 30.48 + as.numeric(x[2]) * 2.54)) %>%
+  rename("Foot"="Preferred Foot")
 
   
   
@@ -78,8 +80,6 @@ Joined_top
 
 
 
-
-
 Create Function
 
 ```{r}
@@ -97,6 +97,7 @@ top_soccer_function <-function(x){
   summarise(count=n())
   
   World_map<- map_data("world")
+  
   Joined_top <-
   World_map %>%
   left_join(Grouped_top)
@@ -114,7 +115,20 @@ top_soccer_function(100)
 Test function
 
 ```{r}
-top_soccer_function(600)
+top_soccer_function(800)
+```
+
+```{r}
+Top_100 <-
+  Cleaned_fifa_data%>%
+  mutate(rank=rank(desc(Overall))) %>%
+  filter(rank<=100) 
+Top_100
+```
+
+```{r}
+ggplot(Top_100) +
+  geom_point(aes(x=Age, y=Overall, color=Foot, size=Wage)) 
 ```
 
 
