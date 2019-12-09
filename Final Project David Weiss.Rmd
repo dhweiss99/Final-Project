@@ -3,6 +3,8 @@ title: "R Notebook"
 output: html_notebook
 ---
 
+
+
 ###Front Matter
 ```{r, message= FALSE}
 library(DataComputing)
@@ -115,7 +117,7 @@ top_soccer_function(100)
 Test function
 
 ```{r}
-top_soccer_function(800)
+top_soccer_function(420)
 ```
 
 ```{r}
@@ -131,6 +133,5 @@ ggplot(Top_100) +
   geom_point(aes(x=Age, y=Overall, color=Foot, size=Wage)) 
 ```
 
-test
 
 
