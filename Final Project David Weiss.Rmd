@@ -46,52 +46,76 @@ Cleaned_fifa_data<-
 head(Cleaned_fifa_data)
 ```
 
-### Load in data set 2
 
 ```{r}
-Countries<- read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final Project/Countries.csv")
-head(Countries)
-```
-
-```{r}
-Top_100<-
+Top<-
   Cleaned_fifa_data%>%
   mutate(rank=rank(desc(Overall))) %>%
-  filter(rank<100)
- 
-Top_100 
-```
-
-Join
-```{r}
-Joined_top_100 <-
-  Top_100 %>%
-  left_join(Countries, by =c("Nationality"="name"))
-Joined_top_100
-```
-
-```{r}
-Grouped_top_100 <-
-  Joined_top_100 %>%
-  group_by(Nationality) %>%
-  summarise(count=n()) %>%
+  filter(rank<100) %>%
   rename("region"=Nationality)
-
-Grouped_top_100
+ 
+Top 
 ```
 
 ```{r}
-TRY_THIS <-
-  world_map %>% 
-  left_join(Grouped_top_100)
+Grouped_top <-
+  Top %>%
+  group_by(region) %>%
+  summarise(count=n())
 
-TRY_THIS
+Grouped_top
+```
+
+
+### Join
+```{r}
+World_map<- map_data("world")
+Joined_top <-
+  World_map %>%
+  left_join(Grouped_top)
+Joined_top
+```
+
+
+
+
+
+Create Function
+
+```{r}
+top_soccer_function <-function(x){
   
+  Top<-
+  Cleaned_fifa_data%>%
+  mutate(rank=rank(desc(Overall))) %>%
+  filter(rank<x) %>%
+  rename("region"=Nationality)
+  
+  Grouped_top <-
+  Top %>%
+  group_by(region) %>%
+  summarise(count=n())
+  
+  World_map<- map_data("world")
+  Joined_top <-
+  World_map %>%
+  left_join(Grouped_top)
+  
+  Map<-
+    ggplot(Joined_top, aes(x = long, y = lat, group=group)) +
+    geom_polygon(aes(fill=count), colour = "white")+
+    scale_fill_viridis_c(option = "C")
+  
+  return(Map)
+}
+top_soccer_function(100)
 ```
 
+Test function
+
 ```{r}
-ggplot(TRY_THIS, aes(x = long, y = lat, group=group)) +
-  geom_polygon(aes(fill=count), colour = "white")+
-  scale_fill_viridis_c(option = "C")
+top_soccer_function(600)
 ```
+
+
 
