@@ -147,13 +147,14 @@ ggplot( data = Position_data, aes(x = Age)) +
              position = position_jitter(height = 0.02)) 
 ```
 
-This g
+This graph makes a lot of sense. We would expect the best players to be in their prime and that usually is correlated with the mid 20s. Interestingly we see some really old defenders and really young defenders in the jitter. Defenders can afford to be on the slower side, so them being old makes sense. However, the younger ones surprise me but seem like outliers as we see the distribution lines are much higher for attack and midfield at the younger ages.
 
 
 ```{r}
-ggplot(data=Position_data,aes(x=rank,y=Wage))+
+### Make a scatter plot showing wage and Overall
+ggplot(data=Position_data,aes(x=Overall,y=Wage))+
   geom_point()+aes(colour=Position) 
 ```
 
 
-Next I was interested to see if a players wage is accurately 
+Finally, I was interested to see if a players wage is correlated with their overall FIFA rating.  As seen in the plot above there is a clear upward trend. Also, we see that Attackers generally make more at a similar overall and defenders make the least. This makes sense as fans want to see goals and the top attackers make the largest impact. 
