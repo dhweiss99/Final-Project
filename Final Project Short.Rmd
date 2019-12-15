@@ -97,47 +97,62 @@ top_soccer_function(1000)
 ```
 
 
-Working with the top 500 players
+From here on out I wanted to work with the top 1000 players. Knowing each of the top 5 leagues has around 20 teams and 11 players start each game, 1000 gives us a pretty good breadth of talent across the board.
 
 ```{r}
 Top<-
   Cleaned_fifa_data%>%
     ### make sure desc overall so the highest overall is the lowest rank
   mutate(rank=rank(desc(Overall))) %>%
-  filter(rank<500)
+  filter(rank<1000)
 ```
 
 
+I also wanted to look at the different position groups and see if things like wage varied across the group. Furthermore, most clubs play a 4-3-3 with a goalie, so I wanted to see how the distribution of the player groups looked. 
 
 ```{r}
-Position_data<-
+Position_data <-
   Top %>%
-  mutate(Position=if_else(Position %in% c("ST", "LF", "RF", "LW", "RW", "RS", "LS", "CF"),"Attack", Position)) %>%
-  mutate(Position=if_else(Position %in% c("CM", "LM", "RM", "LCM", "RCM", "CAM", "CDM", "LDM", "RDM", "LAM", "RAM"),"Midfield", Position)) %>%
-  mutate(Position=if_else(Position %in% c("CB", "LB", "RB", "LWB", "RWB", "LCB", "RCB", "GK"),"Defense", Position))
+  ### Change each position into one of three categories
+  mutate(Position=if_else(Position %in% c("ST", "LF", "RF", "LW", "RW", "RS", "LS", "CF"), "Attack", Position)) %>%
+  mutate(Position=if_else(Position %in% c("CM", "LM", "RM", "LCM", "RCM", "CAM", "CDM", "LDM", "RDM", "LAM", "RAM"), "Midfield", Position)) %>%
+  mutate(Position=if_else(Position %in% c("CB", "LB", "RB", "LWB", "RWB", "LCB", "RCB", "GK"), "Defense", Position))
 
 Position_data
 ```
 
 
-
-
 ```{r}
+### This will create a data table with each position and their count
 Grouped_Position_data<-
   Position_data %>%
   group_by(Position) %>%
   summarise(count=n())
 Grouped_Position_data
 
+### Create a boxplot 
 ggplot(data=Grouped_Position_data,aes(x=Position,y=count ))+
   geom_bar(stat='identity',position='stack', width=.9) 
 ```
 
+I am actually quite surprised by this graphic. I figured FIFA may tailor their ratings to attacking players. I also thought the distribution may be a little more equal than this, even with Defense getting a boost from GK being considered a defender. However, maybe they consider players that play both attack and midfield midfielders. 
+
 
 ```{r}
 ggplot( data = Position_data, aes(x = Age)) + 
-  geom_density(adjust = 0.62) + 
-  facet_wrap(~Position, ncol = 4) + labs(title = "") 
+  geom_density() + 
+  aes(colour = Position) + 
+  ### Add jitter to see actual distribution
+  geom_point(alpha = 0.5, aes(y = 0.02),  
+             position = position_jitter(height = 0.02)) 
+```
+
+This g
+
+
+```{r}
+ggplot(data=Position_data,aes(x=rank,y=Wage))+
+  geom_point()+aes(colour=Position) 
 ```
 
 
