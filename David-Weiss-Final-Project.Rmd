@@ -6,6 +6,7 @@ output: html_notebook
 First I made sure to library some commonly used packages in this course. Not only will this allow me to create graphs, but I will be able to code in the correct syntax.
 
 ```{r, message= FALSE}
+### Load packages
 library(DataComputing)
 library(tidyverse)
 library(mosaic)
@@ -20,6 +21,7 @@ I accessed my data from Kaggle. The [dataset](https://www.kaggle.com/karangadiya
 ```{r, message= FALSE}
 ### Using file.choose we obtained the csv address and then can read in the data
 Orig_Fifa_data <- read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final Project/FIFA DATA.csv")
+
 ### inspect data
 head(Orig_Fifa_data)
 str(Orig_Fifa_data)
@@ -68,6 +70,7 @@ My second data set was going to be data on the world. This would allow me to joi
 ```{r}
 ### Read in second data table
 World_map <- map_data("world")
+
 ### Inspect second data table
 head(World_map)
 ```
@@ -87,7 +90,7 @@ top_soccer_function <-function(x){
     ### Easier for join 
   mutate("region" = Nationality)
   
-    ### Group them by their nationality for the graph
+  ### Group them by their nationality for the graph
   Grouped_top <-
   Top %>%
   group_by(region) %>%
@@ -118,7 +121,7 @@ From here on out I wanted to work with the top 1000 players. Knowing each of the
 ```{r}
 Top <-
   Cleaned_fifa_data %>%
-    ### make sure desc overall so the highest overall is the lowest rank
+  ### make sure desc overall so the highest overall is the lowest rank
   mutate(rank = rank(desc(Overall))) %>%
   filter(rank < 1000)
 ```
@@ -133,6 +136,7 @@ Position_data <-
   mutate(Position = if_else(Position %in% c("ST", "LF", "RF", "LW", "RW", "RS", "LS", "CF"), "Attack", Position)) %>%
   mutate(Position = if_else(Position %in% c("CM", "LM", "RM", "LCM", "RCM", "CAM", "CDM", "LDM", "RDM", "LAM", "RAM"), "Midfield", Position)) %>%
   mutate(Position = if_else(Position %in% c("CB", "LB", "RB", "LWB", "RWB", "LCB", "RCB", "GK"), "Defense", Position))
+
 ### Look at the new data table
 Position_data
 ```
@@ -161,6 +165,7 @@ I then wanted to see how old the top players were and if this varied by position
 ggplot( data = Position_data, aes(x = Age)) + 
   geom_density() + 
   aes(colour = Position) + 
+  
   ### Add jitter to see actual distribution
   geom_point(alpha = 0.5, aes(y = 0.02),  
              position = position_jitter(height = 0.02)) 
