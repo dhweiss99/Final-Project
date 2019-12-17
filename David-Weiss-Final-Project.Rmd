@@ -18,9 +18,9 @@ I accessed my data from Kaggle. The [dataset](https://www.kaggle.com/karangadiya
 
 ### Upload Data Sets
 ```{r, message= FALSE}
-### Using file.choose we store the csv address in dataset
+### Using file.choose we obtained the csv address and then can read in the data
 Orig_Fifa_data <- read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final Project/FIFA DATA.csv")
-
+### inspect data
 head(Orig_Fifa_data)
 str(Orig_Fifa_data)
 ```
@@ -64,7 +64,7 @@ My second data set was going to be data on the world. This would allow me to joi
 ```{r}
 ### Read in second data table
 World_map <- map_data("world")
-
+### Inspect second data table
 head(World_map)
 ```
 This looks good! I wanted latitude and longitude to create a map and this appears to be what I get.
@@ -82,9 +82,9 @@ top_soccer_function <-function(x){
     ### Easier for join 
   mutate("region" = Nationality)
   
+    ### Group them by their nationality for the graph
   Grouped_top <-
   Top %>%
-  ### Group them by their nationality for the graph
   group_by(region) %>%
   summarise(count = n())
   
@@ -127,7 +127,7 @@ Position_data <-
   mutate(Position = if_else(Position %in% c("ST", "LF", "RF", "LW", "RW", "RS", "LS", "CF"), "Attack", Position)) %>%
   mutate(Position = if_else(Position %in% c("CM", "LM", "RM", "LCM", "RCM", "CAM", "CDM", "LDM", "RDM", "LAM", "RAM"), "Midfield", Position)) %>%
   mutate(Position = if_else(Position %in% c("CB", "LB", "RB", "LWB", "RWB", "LCB", "RCB", "GK"), "Defense", Position))
-
+### Look at the new data table
 Position_data
 ```
 
@@ -141,7 +141,7 @@ Grouped_Position_data <-
 
 Grouped_Position_data
 
-### Create a boxplot 
+### Create a bar chart 
 ggplot(data=Grouped_Position_data,aes(x=Position,y=count )) +
   geom_bar(stat = 'identity',position = 'stack', width = .9) 
 ```
@@ -149,8 +149,8 @@ ggplot(data=Grouped_Position_data,aes(x=Position,y=count )) +
 I am actually quite surprised by this graphic. I figured FIFA may tailor their ratings to attacking players. I also thought the distribution may be a little more equal than this, even with Defense getting a boost from GK being considered a defender. However, maybe they consider players that play both attack and midfield midfielders. 
 
 I then wanted to see how old the top players were and if this varied by position.
-
 ```{r}
+### Create density plot of age
 ggplot( data = Position_data, aes(x = Age)) + 
   geom_density() + 
   aes(colour = Position) + 
@@ -169,7 +169,7 @@ ggplot(data = Position_data, aes(x = Overall,y = Wage))+
 ```
 
 
-Finally, I was interested to see if a players wage is correlated with their overall FIFA rating.  As seen in the plot above there is a clear upward trend. Also, we see that Attackers generally make more at a similar overall and defenders make the least. This makes sense as fans want to see goals and the top attackers make the largest impact.
+Finally, I was interested to see if a players wage is correlated with their overall FIFA rating.  As seen in the plot above there is a clear upward trend. Also, we see that Attackers generally make more at a similar overall and defenders make the least. This makes sense as fans want to see goals and the top attackers make the largest impact. Lastly, there appears to be a clear floor at zero which makes sense because you can not pay a player less than that. 
 
 
 Overall, I would say I learned a lot about the best FIFA players. They are generally from Europe and South America. Most are defenders or midfielders, yet the attackers get paid more. They are generally in their mid 20s and the better they get the more they get paid. 
