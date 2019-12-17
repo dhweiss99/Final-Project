@@ -24,6 +24,7 @@ Orig_Fifa_data <- read_csv("/Users/davidweiss/Desktop/Fall 2019/Stat 184/Final P
 head(Orig_Fifa_data)
 str(Orig_Fifa_data)
 ```
+
 Once the data was uploaded it was extremely messy.  There were random columns like ID and Photo that I wanted to get rid of. Also, variables like wage and height were character strings instead of numeric. 
 
 ```{r}
@@ -57,7 +58,10 @@ head(Cleaned_fifa_data)
 str(Cleaned_fifa_data)
   
 ```
+
 After looking through this data table I can see it looks a lot better and easier to work with.
+
+An interesting problem I ran into was matching nationalities to the region in map data. Certain country names weren't in alignment. So I used anti joins on the side to figure out what wasn't being matched and then mutated those names to ensure a successful match when the data tables were joined. 
 
 My second data set was going to be data on the world. This would allow me to join it with the fifa data and create a map. 
 
@@ -67,9 +71,10 @@ World_map <- map_data("world")
 ### Inspect second data table
 head(World_map)
 ```
+
 This looks good! I wanted latitude and longitude to create a map and this appears to be what I get.
 
-The first thing I wanted to look at was where the top FIFA players were from. I thought it would be cool to build a function that would allow a user to select a number, representative of the top x players based on their overall, and then create a map to visualize where they are from. First I ranked the players based on their overall. Then I grouped by their region ie Nationality. This creates a data table that has the count of the players in one column and the Nationality in the other. Then I read in the map data and used a left join so all the cases in the Map are still there. Finally I used ggplot code to create the Map. I then ran it for the top 1000 players. 
+The first thing I wanted to look at was where the top FIFA players were from. I thought it would be cool to build a function that allows a user to select a number, representative of the top x players based on their overall, and then create a map to visualize where they are from. First I ranked the players based on their overall. Then I grouped by their region ie Nationality. This creates a data table that has the count of the players in one column and the Nationality in the other. Then I read in the map data and used a left join so all the cases in the Map are still there. Finally I used ggplot code to create the Map. I then ran it for the top 1000 players. 
 
 ```{r}
 top_soccer_function <-function(x){
@@ -104,7 +109,8 @@ top_soccer_function <-function(x){
 }
 top_soccer_function(1000)
 ```
-Looking at the map gives us some extremely interesting insights. Even though huge countries like the United States, China, Russia, and Australia have millions of people, they have barely any of the top 1000 players. The top are predominantly from Brazil, Argentina and Europe. This is something that I'm not surprised by, but I would still have expected more variety. 
+
+Looking at the map gives us some extremely interesting insights. Even though huge countries like the United States, China, Russia, and Australia have millions of people, they have barely any of the top 1000 players. The top are predominantly from Brazil, Argentina and Europe. This is something that I'm not surprised by, but I would still have expected more variety and in turn, less gray space. 
 
 
 From here on out I wanted to work with the top 1000 players. Knowing each of the top 5 leagues has around 20 teams and 11 players start each game, 1000 gives us a pretty good breadth of talent across the board.
@@ -149,6 +155,7 @@ ggplot(data=Grouped_Position_data,aes(x=Position,y=count )) +
 I am actually quite surprised by this graphic. I figured FIFA may tailor their ratings to attacking players. I also thought the distribution may be a little more equal than this, even with Defense getting a boost from GK being considered a defender. However, maybe they consider players that play both attack and midfield midfielders. 
 
 I then wanted to see how old the top players were and if this varied by position.
+
 ```{r}
 ### Create density plot of age
 ggplot( data = Position_data, aes(x = Age)) + 
@@ -168,8 +175,6 @@ ggplot(data = Position_data, aes(x = Overall,y = Wage))+
   geom_point() + aes(colour = Position) 
 ```
 
-
 Finally, I was interested to see if a players wage is correlated with their overall FIFA rating.  As seen in the plot above there is a clear upward trend. Also, we see that Attackers generally make more at a similar overall and defenders make the least. This makes sense as fans want to see goals and the top attackers make the largest impact. Lastly, there appears to be a clear floor at zero which makes sense because you can not pay a player less than that. 
 
-
-Overall, I would say I learned a lot about the best FIFA players. They are generally from Europe and South America. Most are defenders or midfielders, yet the attackers get paid more. They are generally in their mid 20s and the better they get the more they get paid. 
+Overall, I would say I learned a lot about the best FIFA players. They are generally from Europe and South America. Most are defenders or midfielders, yet the attackers get paid more. They are generally in their mid 20s and the better they are the more they get paid. 
